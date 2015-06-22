@@ -119,7 +119,7 @@ NPC* PreyGroup::add(vec2f spawn)
 	return pred;
 }
 
-void PreyGroup::doAICollision(NPC *npc)
+void PreyGroup::doAICollision(float dt, NPC *npc, Tile *tile)
 {
 	// Nothing really
 }

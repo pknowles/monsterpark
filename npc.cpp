@@ -62,7 +62,7 @@ void NPCGroup::update(float dt, Grid *tileGrid)
 		if (tile.id == -1 || tile.walkable)
 			n->position = newPos;
 		else
-			doAICollision(n);
+			doAICollision(dt, n, &tile);
 
 		n->turningTo = -rot2f::fromVec(vec3f(dir.x, 0.0f, dir.y)).y;
 		if (n->turningTo - n->heading > pi)

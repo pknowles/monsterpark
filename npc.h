@@ -6,6 +6,7 @@
 
 class NPC;
 class Grid;
+struct Tile;
 
 class NPCGroup {
 protected:
@@ -27,7 +28,7 @@ public:
 	virtual NPC* add(vec2f spawn) =0;
 	virtual void rem(NPC* npc);
 	virtual void doAI(NPC* npc);
-	virtual void doAICollision(NPC *npc) =0;
+	virtual void doAICollision(float dt, NPC *npc, Tile *tile) =0;
 	vec2f toGridPos(vec2f pos);
 	float density(vec2f position, float radius);
 	int count();
