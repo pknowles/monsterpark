@@ -20,6 +20,6 @@ public:
 
 	void uploadCamera(); //sets deprecated GL projection/modelview matrices
 
-	vec3f getMousePos(const vec2f &mousePosN);
+	vec2f getMousePos(const vec2f &mousePosN);
 };
 

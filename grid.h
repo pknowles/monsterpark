@@ -9,6 +9,7 @@ struct Tile
 	int id;
 	bool walkable;
 	float health;
+	vec3f color;
 };
 
 class Grid
@@ -21,7 +22,7 @@ private:
 
 	Tile **tiles;
 
-	vec3f mousePos;
+	vec2f mousePos;
 
 	vec2i startPlacePos;
 	vec2i endPlacePos;
@@ -43,7 +44,7 @@ public:
 	Grid(float width = 100, float height = 100, unsigned int rows = 100, unsigned int cols = 100);
 	~Grid();
 
-	void update(float dt, const vec3f &mousePos);
+	void update(float dt, const vec2f &mousePos);
 	void draw();
 
 	void startPlacing();

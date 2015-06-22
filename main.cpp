@@ -17,6 +17,7 @@ Visual studio *spit* *spit* *spit* steps:
 
 #include "grid.h"
 #include "gridFly.h"
+#include "tileType.h"
 
 #include "preds.h"
 #include "prey.h"
@@ -73,13 +74,23 @@ void update(float dt)
 			jeltz.postUnfocusedRedisplay();
 	}
 
-	vec3f mousePos = gridFly.getMousePos(jeltz.mousePosN());
+	auto mousePos = gridFly.getMousePos(jeltz.mousePosN());
 	grid.update(dt, mousePos);
 	
-	if (jeltz.button("LButton"))
-		grid.startPlacing();
+	if (buildType.selected != 2)
+	{
+		// Button pressed, dinosaur not selected
+		if (jeltz.button("LButton"))
+			grid.startPlacing();
+		else
+			grid.endPlacing(buildType.selected);
+	}
 	else
-		grid.endPlacing(buildType.selected);
+	{
+		// Button pressed, dinosaur selected
+		if (jeltz.buttonDown("LButton"))
+			preds.add(mousePos);
+	}
 	
 	//if we can spawn more at the entrance
 	if (prey.count() < maxPrey && prey.density(spawnPoint, 5.0f) < 2)
@@ -115,6 +126,7 @@ int main()
 	gui.controls.add(buildType);
 	buildType.add("Wall");
 	buildType.add("Not-Wall");
+	buildType.add("Dinosaur");
 	buildType.capture(QG::CLICK, changeBuildType);
 
 	Material::defaultAnisotropy = 16;
@@ -129,6 +141,8 @@ int main()
 	
 	prey.predators = &preds;
 	preds.prey = &prey;
+
+	TileTypes::init();
 	prey.init();
 	preds.init();
 

@@ -100,7 +100,7 @@ GridFly::GridFly()
 
 	sensitivity = 0.5;
 	speed = 100.0;
-	pos = vec3f(50, 20, 20);
+	pos = vec3f(-50, 20, 20);
 	
 	camera.zoomAt(pos, vec3f(pos.x, 0, pos.z + 10.01f));
 	camera.regenCamera();
@@ -113,7 +113,7 @@ GridFly::~GridFly()
 void GridFly::uploadCamera()
 {
 	mat44 m = mat44::zero();
-	m[0] = 1.0f;
+	m[0] = -1.0f;
 	m[6] = 1.0f;
 	m[9] = 1.0f;
 	m[15] = 1.0f;
@@ -124,7 +124,7 @@ void GridFly::uploadCamera()
 	glMultMatrixf(m.m);
 }
 
-vec3f GridFly::getMousePos(const vec2f &mousePosN)
+vec2f GridFly::getMousePos(const vec2f &mousePosN)
 {
 	vec3f start;
 	vec3f end;
@@ -138,6 +138,6 @@ vec3f GridFly::getMousePos(const vec2f &mousePosN)
 
 	dir *= d;
 
-	return start + dir;
+	return vec3f(start + dir).xz() * vec2i(-1.0f, 1.0f);
 }
 
