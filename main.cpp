@@ -29,7 +29,8 @@ GridFly gridFly;
 JeltzGUI gui;
 
 int money = 1000;
-int popularity = 10;
+int popularity = 25;
+int deathCost = 100;
 
 Grid grid;
 
@@ -41,7 +42,7 @@ QG::DropSelect buildType("Build Type");
 PreyGroup prey;
 PredGroup preds;
 
-int maxPrey = 10;
+int maxPrey = 5;
 vec2f spawnPoint = vec2f(50.0f, 5.0f);
 
 void changeBuildType()
@@ -63,7 +64,13 @@ void update(float dt)
 	prey.update(dt, &grid);
 	preds.update(dt, &grid);
 	
-	money += prey.collectIncome();
+	int newMoney = prey.collectIncome();
+	money += newMoney;
+	popularity += newMoney / 4;
+	int deaths = prey.getDeaths();
+	money -= deaths * deathCost;
+	deathCost += deaths * (int)sqrt(deathCost);
+	maxPrey = (int)sqrt(popularity);
 	
 	static float reloadTimer = 0.0f;
 	reloadTimer -= dt;
@@ -93,7 +100,7 @@ void update(float dt)
 	}
 	
 	//if we can spawn more at the entrance
-	if (prey.count() < maxPrey && prey.density(spawnPoint, 5.0f) < 2)
+	if (prey.count() < maxPrey && prey.density(spawnPoint, 3.0f) < mymax(4, maxPrey/10))
 	{
 		prey.add(spawnPoint);
 	}

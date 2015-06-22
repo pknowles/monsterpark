@@ -15,6 +15,7 @@ protected:
 	float animSpeed;
 	float aspectRatio;
 	unsigned int texture;
+	int deaths;
 	typedef std::vector<NPC*> NPCList;
 	NPCList all;
 	std::set<NPC*> toRemove;
@@ -31,6 +32,7 @@ public:
 	virtual void rem(NPC* npc);
 	virtual void doAI(NPC* npc);
 	virtual void doAICollision(float dt, NPC *npc, Tile *tile) =0;
+	int getDeaths();
 	vec2f toGridPos(vec2f pos);
 	float density(vec2f position, float radius);
 	NPC* nearest(vec2f position, float radius);

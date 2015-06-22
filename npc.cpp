@@ -30,6 +30,7 @@ void NPCGroup::init()
 
 void NPCGroup::update(float dt, Grid *tileGrid)
 {
+	deaths = toRemove.size();
 	for (auto n = all.begin(); n != all.end();)
 	{
 		if (toRemove.find(*n) != toRemove.end())
@@ -100,6 +101,11 @@ void NPCGroup::doAI(NPC* n)
 	n->movingTo = n->position + (vec2f(UNIT_RAND, UNIT_RAND) - vec2f(0.5f)) * 8.0f;
 }
 
+int NPCGroup::getDeaths()
+{
+	return deaths;
+}
+	
 vec2f NPCGroup::toGridPos(vec2f pos)
 {
 	return (gridRes * (pos - gridArea.origin)) / gridArea.size;
