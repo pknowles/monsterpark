@@ -9,6 +9,7 @@ class NPC;
 class NPCGroup {
 protected:
 	int frames;
+	float animSpeed;
 	unsigned int texture;
 	typedef std::vector<NPC*> NPCList;
 	NPCList all;

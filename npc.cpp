@@ -16,6 +16,7 @@ void NPCGroup::init()
 {
 	frames = 1;
 	texture = 0;
+	animSpeed = 1.0f;
 	gridRes = vec2i(20);
 	gridArea.origin = vec2f(0.0f);
 	gridArea.size = vec2f(100.0f);
@@ -74,8 +75,7 @@ void NPCGroup::draw()
 		glPushMatrix();
 		glTranslatef(n->position.x, 0.0f, n->position.y);
 		glRotatef(n->heading, 0, 1, 0);
-		float f = mymod((int)(n->anim), frames) / frames;
-		//cout << f->anim << endl;
+		float f = mymod((int)(n->anim * animSpeed), (int)frames) / (float)frames;
 		float fd = 1.0f/frames;
 		glBegin(GL_QUADS);
 		glTexCoord2f(f, 0); glVertex3f(-1, 0, -1);
