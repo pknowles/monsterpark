@@ -9,7 +9,9 @@ class NPC;
 class NPCGroup {
 protected:
 	int frames;
+	float moveSpeed;
 	float animSpeed;
+	float aspectRatio;
 	unsigned int texture;
 	typedef std::vector<NPC*> NPCList;
 	NPCList all;
@@ -23,6 +25,7 @@ public:
 	virtual void update(float dt);
 	virtual NPC* add(vec2f spawn) =0;
 	virtual void rem(NPC* npc);
+	virtual void doAI(NPC* npc);
 	vec2f toGridPos(vec2f pos);
 	float density(vec2f position, float radius);
 	int count();
@@ -31,7 +34,9 @@ public:
 struct NPC {
 	vec2f position;
 	float heading;
+	float turningTo;
 	vec2f movingTo;
-	float anim;
+	float moveTimer;
+	float time;
 	NPC();
 };

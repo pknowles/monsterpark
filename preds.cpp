@@ -14,6 +14,9 @@ void PredGroup::init()
 	img.loadImage("preds.png");
 	texture = img.bufferTexture();
 	frames = 2;
+	animSpeed = 2.0f;
+	moveSpeed = 4.0;
+	aspectRatio = img.width / (float)(img.height * frames);
 }
 
 NPC* PredGroup::add(vec2f spawn)

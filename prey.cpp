@@ -14,6 +14,9 @@ void PreyGroup::init()
 	img.loadImage("prey.png");
 	texture = img.bufferTexture();
 	frames = 8;
+	animSpeed = 10.0f;
+	moveSpeed = 2.0;
+	aspectRatio = img.width / (float)(img.height * frames);
 }
 
 NPC* PreyGroup::add(vec2f spawn)

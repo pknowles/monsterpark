@@ -37,7 +37,7 @@ QG::DropSelect buildType("Build Type");
 PreyGroup prey;
 PredGroup preds;
 
-int maxPrey = 10;
+int maxPrey = 1;
 vec2f spawnPoint = vec2f(50.0f);
 
 void changeBuildType()
