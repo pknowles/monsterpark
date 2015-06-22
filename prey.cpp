@@ -19,7 +19,8 @@ Text* getText(std::string text)
 	if (textCache.find(text) == textCache.end())
 	{
 		cout << "New Text: " << text << endl;
-		textCache[text] = new Text(Config::getString("font"), Config::get("font-size"));
+		textCache[text] = new Text(Config::getString("font"), 42);
+		textCache[text]->colour = vec4f(1.0f);
 		*textCache[text] = text;
 	}
 	return textCache[text];
@@ -35,10 +36,10 @@ int PreyGroup::collectIncome()
 void PreyGroup::newIncome(vec2f pos, int money)
 {
 	income += money;
-	/*moneyIcons.push_back(MoneyIcon());
+	moneyIcons.push_back(MoneyIcon());
 	moneyIcons.back().pos = pos;
 	moneyIcons.back().time = 1.0;
-	moneyIcons.back().amount = money;*/
+	moneyIcons.back().amount = money;
 }
 	
 PreyGroup::PreyGroup()
@@ -66,7 +67,7 @@ void PreyGroup::update(float dt)
 	if (!predators)
 		return;
 	
-	for (auto not_n : all)
+	for (auto& not_n : all)
 	{
 		Prey* n = (Prey*)not_n;
 		n->moneyTime -= dt;
@@ -74,7 +75,6 @@ void PreyGroup::update(float dt)
 		{
 			n->moneyTime += 1.0f;
 			int density = predators->density(n->position, 5.0f);
-			//cout << density << endl;
 			if (density > 0)
 				newIncome(n->position, density);
 		}
@@ -85,6 +85,7 @@ void PreyGroup::update(float dt)
 		if (t->time > 0.0f)
 		{
 			t->time -= dt;
+			t->pos.y += dt * 0.1;
 			++t;
 		}
 		else
@@ -104,7 +105,7 @@ void PreyGroup::draw()
 	mat44 mvp = mv * proj;
 	
 	
-	for (auto t : moneyIcons)
+	for (auto& t : moneyIcons)
 	{
 		getText(intToString(t.amount))->draw(mv * mat44::translate(vec3f(t.pos, 0.0)));
 	}
