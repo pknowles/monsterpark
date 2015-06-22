@@ -13,6 +13,7 @@ void PredGroup::init()
 	QI::ImagePNG img;
 	img.loadImage("preds.png");
 	texture = img.bufferTexture();
+	frames = 2;
 }
 
 NPC* PredGroup::add(vec2f spawn)

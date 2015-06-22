@@ -11,8 +11,9 @@ void PreyGroup::init()
 {
 	NPCGroup::init();
 	QI::ImagePNG img;
-	img.loadImage("preds.png");
+	img.loadImage("prey.png");
 	texture = img.bufferTexture();
+	frames = 8;
 }
 
 NPC* PreyGroup::add(vec2f spawn)

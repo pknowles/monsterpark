@@ -14,6 +14,7 @@ using namespace std;
 
 void NPCGroup::init()
 {
+	frames = 1;
 	texture = 0;
 	gridRes = vec2i(20);
 	gridArea.origin = vec2f(0.0f);
@@ -64,6 +65,8 @@ float NPCGroup::density(vec2f position, float radius)
 
 void NPCGroup::draw()
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	for (auto n : all)
 	{
 		glEnable(GL_TEXTURE_2D);
@@ -71,15 +74,19 @@ void NPCGroup::draw()
 		glPushMatrix();
 		glTranslatef(n->position.x, 0.0f, n->position.y);
 		glRotatef(n->heading, 0, 1, 0);
+		float f = mymod((int)(n->anim), frames) / frames;
+		//cout << f->anim << endl;
+		float fd = 1.0f/frames;
 		glBegin(GL_QUADS);
-		glTexCoord2f(0, 0); glVertex3f(-1, 0, -1);
-		glTexCoord2f(1, 0); glVertex3f(1, 0, -1);
-		glTexCoord2f(1, 1); glVertex3f(1, 0, 1);
-		glTexCoord2f(0, 1); glVertex3f(-1, 0, 1);
+		glTexCoord2f(f, 0); glVertex3f(-1, 0, -1);
+		glTexCoord2f(f+fd, 0); glVertex3f(1, 0, -1);
+		glTexCoord2f(f+fd, 1); glVertex3f(1, 0, 1);
+		glTexCoord2f(f, 1); glVertex3f(-1, 0, 1);
 		glEnd();
 		glPopMatrix();
 		glDisable(GL_TEXTURE_2D);
 	}
+	glDisable(GL_BLEND);
 }
 
 void NPCGroup::onAdd(NPC* n)

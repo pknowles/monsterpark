@@ -8,6 +8,7 @@ class NPC;
 
 class NPCGroup {
 protected:
+	int frames;
 	unsigned int texture;
 	typedef std::vector<NPC*> NPCList;
 	NPCList all;
