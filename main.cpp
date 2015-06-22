@@ -14,11 +14,17 @@ Visual studio *spit* *spit* *spit* steps:
 
 #include <pyarlib/pyarlib.h>
 
+#include "preds.h"
+#include "prey.h"
+
 Jeltz jeltz("Jeltz");
 JeltzFly fly;
 JeltzGUI gui;
 
 VBOMesh sphere;
+
+PreyGroup prey;
+PredGroup preds;
 
 void update(float dt)
 {
@@ -27,6 +33,9 @@ void update(float dt)
 		gui.visible = !gui.visible;
 		gui.fps.print = !gui.visible;
 	}
+	
+	prey.update(dt);
+	preds.update(dt);
 	
 	static float reloadTimer = 0.0f;
 	reloadTimer -= dt;
@@ -46,6 +55,9 @@ void display()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	sphere.draw();
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	
+	prey.draw();
+	preds.draw();
 }
 
 int main()

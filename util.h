@@ -1,9 +1,11 @@
 #pragma once
 
+#include <pyarlib/vec.h>
+
 namespace pyarlib {
 
 struct Box {
-	ved2f origin;
+	vec2f origin;
 	vec2f size;
 };
 

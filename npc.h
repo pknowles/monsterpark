@@ -7,19 +7,26 @@
 class NPC;
 
 class NPCGroup {
-public:
-	std::vector<std::vector<NPC*> > all;
-	std::vector<std::vector<NPC*> > grid;
+protected:
+	unsigned int texture;
+	typedef std::vector<NPC*> NPCList;
+	NPCList all;
+	std::vector<NPCList> grid;
+	vec2i gridRes;
 	pyarlib::Box gridArea;
-	void draw();
-	void update(float dt);
-	NPC* add(vec2f spawn);
+	virtual void onAdd(NPC* n);
+public:
+	virtual void init();
+	virtual void draw();
+	virtual void update(float dt);
+	virtual NPC* add(vec2f spawn) =0;
+	virtual void rem(NPC* npc);
 };
 
-class NPC {
-public: //lol. "class"
+struct NPC {
 	vec2f position;
 	float heading;
-	void update(float dt);
-	void draw();
+	vec2f movingTo;
+	float anim;
+	NPC();
 };
