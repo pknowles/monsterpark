@@ -48,3 +48,9 @@ NPC* PredGroup::add(vec2f spawn)
 	onAdd(pred);
 	return pred;
 }
+#include <iostream>
+void PredGroup::doAICollision(NPC *npc)
+{
+	cout << "Damage the wall!\n";
+}
+

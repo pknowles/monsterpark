@@ -21,6 +21,7 @@ public:
 	virtual void update(float dt, Grid *tileGrid);
 	virtual void draw();
 	virtual NPC* add(vec2f spawn);
+	virtual void doAICollision(NPC *npc) override;
 };
 
 struct Prey : public NPC {

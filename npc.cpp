@@ -26,7 +26,7 @@ void NPCGroup::init()
 	gridArea.size = vec2f(100.0f);
 	grid.resize(gridRes.x * gridRes.y);
 }
-#include <iostream>
+
 void NPCGroup::update(float dt, Grid *tileGrid)
 {
 	for (auto l : grid)
@@ -61,7 +61,7 @@ void NPCGroup::update(float dt, Grid *tileGrid)
 		if (tile.id == -1 || tile.walkable)
 			n->position = newPos;
 		else
-			cout << "Collision!\n";
+			doAICollision(n);
 
 		n->turningTo = -rot2f::fromVec(vec3f(dir.x, 0.0f, dir.y)).y;
 		if (n->turningTo - n->heading > pi)
