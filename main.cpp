@@ -31,11 +31,20 @@ Grid grid;
 
 VBOMesh sphere;
 
+QG::Label gameStatus;
+QG::DropSelect buildType("Build Type");
+
 PreyGroup prey;
 PredGroup preds;
 
 int maxPrey = 10;
 vec2f spawnPoint = vec2f(50.0f);
+
+void changeBuildType()
+{
+	//may get called a few times each time you change it. sorry :(
+	printf("%i\n", buildType.selected);
+}
 
 void update(float dt)
 {
@@ -44,6 +53,8 @@ void update(float dt)
 		gui.visible = !gui.visible;
 		gui.fps.print = !gui.visible;
 	}
+	
+	gameStatus.textf("Status:\n%f", dt);
 	
 	prey.update(dt);
 	preds.update(dt);
@@ -73,6 +84,8 @@ void update(float dt)
 void display()
 {
 	//fly.uploadCamera();
+	glDisable(GL_DEPTH_TEST);
+	
 	gridFly.uploadCamera();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -90,6 +103,12 @@ int main()
 	//jeltz.add(&fly);
 	jeltz.add(&gridFly);
 	jeltz.init();
+	
+	gui.controls.add(gameStatus);
+	gui.controls.add(buildType);
+	buildType.add("Wall");
+	buildType.add("Not-Wall");
+	buildType.capture(QG::CLICK, changeBuildType);
 
 	Material::defaultAnisotropy = 16;
 	VBOMeshOBJ::registerLoader();
