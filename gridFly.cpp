@@ -3,7 +3,9 @@
 
 #include "gridFly.h"
 
-#include <GL/gl.h>
+#include <pyarlib/includegl.h>
+
+#include <stdio.h>
 
 using namespace std;
 
@@ -24,13 +26,13 @@ void GridFly::update(float dt)
 		
 	//standard wasd fly movement
 	if (jeltz->button("A"))
-		{pos.x += mspeed * dt; moved = true;}
+		{camera.move(vec3f(mspeed * dt, 0.0f, 0.0f)); moved = true;}
 	if (jeltz->button("D"))
-		{pos.x += mspeed * -dt; moved = true;}
+		{camera.move(vec3f(-mspeed * dt, 0.0f, 0.0f)); moved = true;}
 	if (jeltz->button("S"))
-		{pos.z += mspeed * dt; moved = true;}
+		{camera.move(vec3f(0.0f, 0.0f, -mspeed * dt)); moved = true;}
 	if (jeltz->button("W"))
-		{pos.z += mspeed * -dt; moved = true;}
+		{camera.move(vec3f(0.0f, 0.0f, mspeed * dt)); moved = true;}
 	
 	//middle mouse pan
 	/*if (jeltz->button("MButton"))
@@ -72,13 +74,11 @@ void GridFly::update(float dt)
 		}
 	}
 #endif
-
-	camera.zoomAt(pos, vec3f(pos.x, 0, pos.z));
 	
 	//only regen matrix if the camera has changed
 	if (moved)
 		camera.regenCamera();
-		
+
 	//update projection aspect ratio if window resized
 	if (jeltz->resized())
 	{
@@ -98,9 +98,9 @@ GridFly::GridFly()
 
 	sensitivity = 0.5;
 	speed = 100.0;
-	pos = vec3f(50, -20, 50);
+	pos = vec3f(50, 20, 20);
 	
-	camera.zoomAt(pos, vec3f(pos.x, 0, pos.z));
+	camera.zoomAt(pos, vec3f(pos.x, 0, pos.z + 10.01f));
 	camera.regenCamera();
 }
 
@@ -110,10 +110,16 @@ GridFly::~GridFly()
 
 void GridFly::uploadCamera()
 {
+	mat44 m = mat44::zero();
+	m[0] = 1.0f;
+	m[6] = 1.0f;
+	m[9] = 1.0f;
+	m[15] = 1.0f;
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(camera.getProjection().m);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(camera.getInverse().m);
+	glMultMatrixf(m.m);
 }
 
 vec3f GridFly::getMousePos(const vec2f &mousePosN)

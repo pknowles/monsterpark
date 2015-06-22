@@ -37,8 +37,8 @@ QG::DropSelect buildType("Build Type");
 PreyGroup prey;
 PredGroup preds;
 
-int maxPrey = 1;
-vec2f spawnPoint = vec2f(50.0f);
+int maxPrey = 10;
+vec2f spawnPoint = vec2f(50.0f, 5.0f);
 
 void changeBuildType()
 {
@@ -77,7 +77,7 @@ void update(float dt)
 		grid.endPlacing(buildType.selected);
 	
 	//if we can spawn more at the entrance
-	if (prey.count() < maxPrey && prey.density(spawnPoint, 5.0f) < 4)
+	if (prey.count() < maxPrey && prey.density(spawnPoint, 5.0f) < 2)
 	{
 		prey.add(spawnPoint);
 	}

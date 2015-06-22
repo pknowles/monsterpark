@@ -59,7 +59,7 @@ void NPCGroup::update(float dt)
 void NPCGroup::doAI(NPC* n)
 {
 	n->moveTimer = UNIT_RAND * 2.0f;
-	n->movingTo = n->position + (vec2f(UNIT_RAND, UNIT_RAND) - vec2f(0.5f)).unit()*10.0f;
+	n->movingTo = n->position + (vec2f(UNIT_RAND, UNIT_RAND) - vec2f(0.5f)).unit() * 2.0f;
 }
 
 vec2f NPCGroup::toGridPos(vec2f pos)
@@ -91,15 +91,15 @@ void NPCGroup::draw()
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glPushMatrix();
-		glTranslatef(n->position.x, 0.0f, n->position.y);
+		glTranslatef(n->position.x, n->position.y, 0.0f);
 		glRotatef(n->heading * 180.0f/pi, 0, 1, 0);
 		float f = mymod((int)(n->time * animSpeed), (int)frames) / (float)frames;
 		float fd = 1.0f/frames;
 		glBegin(GL_QUADS);
-		glTexCoord2f(f, 0); glVertex3f(-aspectRatio, 0, -1);
-		glTexCoord2f(f+fd, 0); glVertex3f(aspectRatio, 0, -1);
-		glTexCoord2f(f+fd, 1); glVertex3f(aspectRatio, 0, 1);
-		glTexCoord2f(f, 1); glVertex3f(-aspectRatio, 0, 1);
+		glTexCoord2f(f, 0); glVertex3f(-aspectRatio, -1, 0);
+		glTexCoord2f(f+fd, 0); glVertex3f(aspectRatio, -1, 0);
+		glTexCoord2f(f+fd, 1); glVertex3f(aspectRatio, 1, 0);
+		glTexCoord2f(f, 1); glVertex3f(-aspectRatio, 1, 0);
 		glEnd();
 		glPopMatrix();
 		glDisable(GL_TEXTURE_2D);
