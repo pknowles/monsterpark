@@ -46,6 +46,27 @@ void Grid::drawTileQuad(const vec2i &pos, const vec3f &color)
 	glColor3f(1, 1, 1);
 }
 
+void Grid::drawPlacement(const vec2i &start, const vec2i &end, const vec3f &color)
+{
+	vec2f cellSize(size.x / (float) cols, size.y / (float) rows);
+
+	vec2i min = vmin(start, end);
+	vec2i max = vmax(start, end) + cellSize;
+
+	glColor3f(color.x, color.y, color.z);
+
+	glBegin(GL_QUADS);
+
+	glVertex3f(min.x, 0, min.y);
+	glVertex3f(min.x, 0, max.y);
+	glVertex3f(max.x, 0, max.y);
+	glVertex3f(max.x, 0, min.y);
+
+	glEnd();
+
+	glColor3f(1, 1, 1);
+}
+
 void Grid::drawTiles()
 {
 	for (unsigned int i = 0; i < cols; i++)
@@ -58,11 +79,19 @@ void Grid::drawTiles()
 	}
 }
 
+void Grid::placeTile(unsigned int x, unsigned int y, int type)
+{
+	if (tiles[x][y].id != -1)
+		return;
+
+	tiles[x][y].id = type;
+}
 
 
 
 
-Grid::Grid(float width, float height, unsigned int rows, unsigned int cols) : rows(rows), cols(cols)
+
+Grid::Grid(float width, float height, unsigned int rows, unsigned int cols) : rows(rows), cols(cols), placing(false)
 {
 	size = vec2f(width, height);
 	mousePos = vec3f(0, 0, 0);
@@ -100,16 +129,40 @@ void Grid::draw()
 		drawLines();
 		drawTiles();
 		drawTileQuad(getTilePos(), vec3f(0, 0, 1));
+
+		if (placing)
+			drawPlacement(startPlacePos, endPlacePos, vec3f(0, 0, 1));
 	}
 }
 
-void Grid::placeTile()
+void Grid::startPlacing()
 {
-	vec2i mouse = getTilePos();
+	if (!placing)
+		startPlacePos = getTilePos();
+	endPlacePos = getTilePos();
 
-	if (tiles[mouse.x][mouse.y].id != -1)
+	placing = true;
+}
+
+void Grid::endPlacing()
+{
+	if (!placing)
 		return;
 
-	tiles[mouse.x][mouse.y].id = 1;
+	endPlacePos = getTilePos();
+	placing = false;
+
+	unsigned int minX = mymin(startPlacePos.x, endPlacePos.x);
+	unsigned int maxX = mymax(startPlacePos.x, endPlacePos.x);
+	unsigned int minY = mymin(startPlacePos.y, endPlacePos.y);
+	unsigned int maxY = mymax(startPlacePos.y, endPlacePos.y);
+
+	for (unsigned int x = minX; x <= maxX; x++)
+	{
+		for (unsigned int y = minY; y <= maxY; y++)
+		{
+			placeTile(x, y, 1);
+		}
+	}
 }
 
