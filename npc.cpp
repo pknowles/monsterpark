@@ -45,7 +45,7 @@ void NPCGroup::update(float dt)
 			doAI(n);
 		vec2f dir = (n->movingTo - n->position).unit();
 		n->position += dir * dt * moveSpeed;
-		n->turningTo = rot2f::fromVec(vec3f(dir.x, 0.0f, dir.y)).y;
+		n->turningTo = -rot2f::fromVec(vec3f(dir.x, 0.0f, dir.y)).y;
 		if (n->turningTo - n->heading > pi)
 			n->heading += 2.0f * pi;
 		if (n->turningTo - n->heading < -pi)
@@ -92,7 +92,7 @@ void NPCGroup::draw()
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glPushMatrix();
 		glTranslatef(n->position.x, n->position.y, 0.0f);
-		glRotatef(n->heading * 180.0f/pi, 0, 1, 0);
+		glRotatef(n->heading * 180.0f/pi, 0, 0, 1);
 		float f = mymod((int)(n->time * animSpeed), (int)frames) / (float)frames;
 		float fd = 1.0f/frames;
 		glBegin(GL_QUADS);

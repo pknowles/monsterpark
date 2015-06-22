@@ -27,6 +27,9 @@ JeltzFly fly;
 GridFly gridFly;
 JeltzGUI gui;
 
+int money = 1000;
+int popularity = 10;
+
 Grid grid;
 
 VBOMesh sphere;
@@ -54,10 +57,12 @@ void update(float dt)
 		gui.fps.print = !gui.visible;
 	}
 	
-	gameStatus.textf("Status:\n%f", dt);
+	gameStatus.textf("Money: $%i\nPopularity: %i", money, popularity);
 	
 	prey.update(dt);
 	preds.update(dt);
+	
+	money += prey.collectIncome();
 	
 	static float reloadTimer = 0.0f;
 	reloadTimer -= dt;
@@ -122,6 +127,8 @@ int main()
 	sphere = VBOMesh::grid(vec2i(64, 32), VBOMesh::paramSphere);
 	sphere.upload();
 	
+	prey.predators = &preds;
+	preds.prey = &prey;
 	prey.init();
 	preds.init();
 

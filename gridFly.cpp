@@ -78,7 +78,9 @@ void GridFly::update(float dt)
 	//only regen matrix if the camera has changed
 	if (moved)
 		camera.regenCamera();
-
+		
+	//printf("%f %f\n", camera.getPosition().x, camera.getPosition().y);
+		
 	//update projection aspect ratio if window resized
 	if (jeltz->resized())
 	{
