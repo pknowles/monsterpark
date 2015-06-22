@@ -7,6 +7,8 @@
 struct Tile
 {
 	int id;
+	bool walkable;
+	float health;
 };
 
 class Grid
@@ -20,6 +22,9 @@ private:
 	Tile **tiles;
 
 	vec3f mousePos;
+
+	vec2i startPlacePos;
+	vec2i endPlacePos;
 
 private:
 	vec2i getTilePos();
@@ -37,5 +42,8 @@ public:
 	void draw();
 
 	void placeTile();
+
+	void startPlacing();
+	void endPlacing();
 };
 

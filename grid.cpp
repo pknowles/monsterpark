@@ -113,3 +113,13 @@ void Grid::placeTile()
 	tiles[mouse.x][mouse.y].id = 1;
 }
 
+void Grid::startPlacing()
+{
+	vec2i mouse = getTilePos();
+}
+
+void Grid::endPlacing()
+{
+	vec2i mouse = getTilePos();
+}
+
