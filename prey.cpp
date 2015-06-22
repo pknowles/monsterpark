@@ -38,7 +38,7 @@ void PreyGroup::newIncome(vec2f pos, int money)
 	income += money;
 	moneyIcons.push_back(MoneyIcon());
 	moneyIcons.back().pos = pos;
-	moneyIcons.back().time = 1.0;
+	moneyIcons.back().time = 2.0;
 	moneyIcons.back().amount = money;
 }
 	
@@ -73,8 +73,8 @@ void PreyGroup::update(float dt, Grid *tileGrid)
 		n->moneyTime -= dt;
 		if (n->moneyTime < 0.0f)
 		{
-			n->moneyTime += 1.0f;
-			int density = predators->density(n->position, 5.0f);
+			n->moneyTime += 5.0f;
+			int density = predators->density(n->position, 10.0f);
 			if (density > 0)
 				newIncome(n->position, density);
 		}
@@ -90,7 +90,7 @@ void PreyGroup::update(float dt, Grid *tileGrid)
 		}
 		else
 		{
-			moneyIcons.erase(t);
+			t = moneyIcons.erase(t);
 		}
 	}
 }
@@ -102,12 +102,19 @@ void PreyGroup::draw()
 	mat44 mv, proj;
 	glGetFloatv(GL_PROJECTION_MATRIX, proj.m);
 	glGetFloatv(GL_MODELVIEW_MATRIX, mv.m);
-	mat44 mvp = mv * proj;
+	mat44 mvp = proj * mv;
 	
+	vec4i vp;
+	glGetIntegerv(GL_VIEWPORT, (int*)&vp);
+	mat44 window = mat44::translate(-1.0, -1.0, 0.0) *
+			mat44::scale(2.0f/vp.z, 2.0f/vp.w, -0.01);
 	
 	for (auto& t : moneyIcons)
 	{
-		getText(intToString(t.amount))->draw(mv * mat44::translate(vec3f(t.pos, 0.0)));
+		vec4f clip = mvp * vec4f(t.pos, 0.0f, 1.0f);
+		clip /= clip.w;
+		vec2i pixelPos = (clip.xy() * 0.5 + 0.5) * vp.zw();
+		getText(intToString(t.amount))->draw(window * mat44::translate(vec3f(pixelPos, 0)));
 	}
 }
 

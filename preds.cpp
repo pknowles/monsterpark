@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include <pyarlib/pyarlib.h>
+#include "prey.h"
 #include "preds.h"
 
 using namespace std;
@@ -32,7 +33,27 @@ void PredGroup::update(float dt, Grid *tileGrid)
 	for (auto& not_n : all)
 	{
 		Pred* n = (Pred*)not_n;
+		
 		//cout << n->position << endl;
+	}
+}
+
+void PredGroup::doAI(NPC* npc)
+{
+	NPCGroup::doAI(npc);
+
+	if (!prey)
+		return;
+		
+	NPC* nearest = prey->nearest(npc->position, 5.0);
+	if (nearest)
+	{
+		float dist = (npc->position - nearest->position).size();
+		if (dist < 1.0f)
+		{
+			prey->takeDamage(nearest, 60.0f);
+		}
+		npc->movingTo = nearest->position;
 	}
 }
 

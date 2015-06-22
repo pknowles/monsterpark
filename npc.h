@@ -16,11 +16,13 @@ protected:
 	unsigned int texture;
 	typedef std::vector<NPC*> NPCList;
 	NPCList all;
+	std::set<NPC*> toRemove;
 	std::vector<NPCList> grid;
 	vec2i gridRes;
 	pyarlib::Box gridArea;
 	virtual void onAdd(NPC* n);
 public:
+	virtual void takeDamage(NPC* npc, float damage);
 	virtual void init();
 	virtual void draw();
 	virtual void update(float dt, Grid *tileGrid);
@@ -29,10 +31,12 @@ public:
 	virtual void doAI(NPC* npc);
 	vec2f toGridPos(vec2f pos);
 	float density(vec2f position, float radius);
+	NPC* nearest(vec2f position, float radius);
 	int count();
 };
 
 struct NPC {
+	float health;
 	vec2f position;
 	float heading;
 	float turningTo;

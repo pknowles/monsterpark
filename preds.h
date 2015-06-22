@@ -9,6 +9,7 @@ public:
 	virtual void init();
 	virtual void update(float dt, Grid *tileGrid);
 	virtual void draw();
+	virtual void doAI(NPC* npc);
 	virtual NPC* add(vec2f spawn);
 };
 

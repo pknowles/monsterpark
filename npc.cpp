@@ -30,6 +30,18 @@ void NPCGroup::init()
 #include <iostream>
 void NPCGroup::update(float dt, Grid *tileGrid)
 {
+	for (auto n = all.begin(); n != all.end();)
+	{
+		if (toRemove.find(*n) != toRemove.end())
+		{
+			delete *n;
+			n = all.erase(n);
+		}
+		else
+			++n;
+	}
+	toRemove.clear();
+
 	for (auto& l : grid)
 		l.clear();
 	
@@ -75,10 +87,17 @@ void NPCGroup::update(float dt, Grid *tileGrid)
 	
 }
 
+void NPCGroup::takeDamage(NPC* npc, float damage)
+{
+	npc->health -= damage;
+	if (npc->health < 0.0f)
+		rem(npc);
+}
+
 void NPCGroup::doAI(NPC* n)
 {
 	n->moveTimer = UNIT_RAND * 2.0f;
-	n->movingTo = n->position + (vec2f(UNIT_RAND, UNIT_RAND) - vec2f(0.5f)) * 2.0f;
+	n->movingTo = n->position + (vec2f(UNIT_RAND, UNIT_RAND) - vec2f(0.5f)) * 8.0f;
 }
 
 vec2f NPCGroup::toGridPos(vec2f pos)
@@ -104,6 +123,26 @@ float NPCGroup::density(vec2f position, float radius)
 		}
 	}
 	return c;
+}
+
+NPC* NPCGroup::nearest(vec2f position, float radius)
+{
+	vec2i p = toGridPos(position);
+	int r = (int)ceil(gridRes.x * radius / gridArea.size.x);
+	float minDist = radius + 1.0f;
+	NPC* n = NULL;
+	for (int y = mymax(0, p.y-r); y < mymin(gridRes.y-1, p.y+r); ++y)
+	{
+		for (int x = mymax(0, p.x-r); x < mymin(gridRes.x-1, p.x+r); ++x)
+		{
+			for (auto& o : grid[y*gridRes.x+x])
+			{
+				if (!n || (n->position - o->position).size() < minDist)
+					n = o;
+			}
+		}
+	}
+	return n;
 }
 
 void NPCGroup::draw()
@@ -139,18 +178,7 @@ void NPCGroup::onAdd(NPC* n)
 
 void NPCGroup::rem(NPC* npc)
 {
-	//broken:
-	//http://stackoverflow.com/questions/3385229/c-erase-vector-element-by-value-rather-than-by-position
-	//all.erase(std::remove(all.begin(), all.end(), npc), all.end());
-	
-	int i = 0;
-	for (auto& n : all)
-	{
-		if (npc == n)
-			break;
-		++i;
-	}
-	all.erase(all.begin()+i);
+	toRemove.insert(npc);
 }
 
 int NPCGroup::count()
@@ -160,6 +188,7 @@ int NPCGroup::count()
 
 NPC::NPC()
 {
+	health = 100.0f;
 	position = vec2f(0.0f);
 	heading = 0.0f;
 	movingTo = vec2f(0.0f);
