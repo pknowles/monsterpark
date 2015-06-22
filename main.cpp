@@ -14,8 +14,13 @@ Visual studio *spit* *spit* *spit* steps:
 
 #include <pyarlib/pyarlib.h>
 
+
 #include "grid.h"
 #include "gridFly.h"
+
+#include "preds.h"
+#include "prey.h"
+
 
 Jeltz jeltz("Jeltz");
 JeltzFly fly;
@@ -26,6 +31,12 @@ Grid grid;
 
 VBOMesh sphere;
 
+PreyGroup prey;
+PredGroup preds;
+
+int maxPrey = 10;
+vec2f spawnPoint = vec2f(50.0f);
+
 void update(float dt)
 {
 	if (jeltz.buttonDown("`"))
@@ -33,6 +44,9 @@ void update(float dt)
 		gui.visible = !gui.visible;
 		gui.fps.print = !gui.visible;
 	}
+	
+	prey.update(dt);
+	preds.update(dt);
 	
 	static float reloadTimer = 0.0f;
 	reloadTimer -= dt;
@@ -48,6 +62,12 @@ void update(float dt)
 	
 	if (jeltz.button("LButton"))
 		grid.placeTile();
+	
+	//if we can spawn more at the entrance
+	if (prey.count() < maxPrey && prey.density(spawnPoint, 5.0f) < 4)
+	{
+		prey.add(spawnPoint);
+	}
 }
 
 void display()
@@ -57,11 +77,9 @@ void display()
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//sphere.draw();
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
 	grid.draw();
+	prey.draw();
+	preds.draw();
 }
 
 int main()
@@ -82,6 +100,9 @@ int main()
 
 	sphere = VBOMesh::grid(vec2i(64, 32), VBOMesh::paramSphere);
 	sphere.upload();
+	
+	prey.init();
+	preds.init();
 
 	jeltz.run();
 	return 0;
