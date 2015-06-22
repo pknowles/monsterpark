@@ -29,7 +29,7 @@ void PredGroup::update(float dt, Grid *tileGrid)
 	if (!prey)
 		return;
 	
-	for (auto not_n : all)
+	for (auto& not_n : all)
 	{
 		Pred* n = (Pred*)not_n;
 		//cout << n->position << endl;

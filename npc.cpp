@@ -4,6 +4,7 @@
 #include <string>
 #include <set>
 #include <iostream>
+#include <assert.h>
 
 #include <pyarlib/includegl.h>
 #include <pyarlib/util.h>
@@ -29,17 +30,17 @@ void NPCGroup::init()
 
 void NPCGroup::update(float dt, Grid *tileGrid)
 {
-	for (auto l : grid)
+	for (auto& l : grid)
 		l.clear();
 	
-	for (auto n : all)
+	for (auto& n : all)
 	{
 		vec2i p = toGridPos(n->position);
 		p = vmin(vmax(p, vec2i(0)), gridRes-1);
 		grid[p.y*gridRes.x+p.x].push_back(n);
 	}	
 
-	for (auto n : all)
+	for (auto& n : all)
 	{
 		n->time += dt;
 		n->moveTimer -= dt;
@@ -90,10 +91,15 @@ float NPCGroup::density(vec2f position, float radius)
 	vec2i p = toGridPos(position);
 	int r = (int)ceil(gridRes.x * radius / gridArea.size.x);
 	int c = 0;
-	for (int y = mymin(0, p.y-r); y < mymax(gridRes.y-1, p.y+r); ++y)
+	for (int y = mymax(0, p.y-r); y < mymin(gridRes.y-1, p.y+r); ++y)
 	{
-		for (int x = mymin(0, p.x-r); x < mymax(gridRes.x-1, p.x+r); ++x)
+		for (int x = mymax(0, p.x-r); x < mymin(gridRes.x-1, p.x+r); ++x)
 		{
+			/*if (y*gridRes.x+x < 0 || y*gridRes.x+x >= grid.size())
+			{
+				cout << position << x << " " << y << endl;
+				return 0.0f;
+			}*/
 			c += (int)grid[y*gridRes.x+x].size();
 		}
 	}
@@ -104,7 +110,7 @@ void NPCGroup::draw()
 {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	for (auto n : all)
+	for (auto& n : all)
 	{
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texture);
@@ -138,7 +144,7 @@ void NPCGroup::rem(NPC* npc)
 	//all.erase(std::remove(all.begin(), all.end(), npc), all.end());
 	
 	int i = 0;
-	for (auto n : all)
+	for (auto& n : all)
 	{
 		if (npc == n)
 			break;
