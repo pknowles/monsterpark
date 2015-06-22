@@ -32,7 +32,7 @@ void PredGroup::update(float dt)
 	for (auto not_n : all)
 	{
 		Pred* n = (Pred*)not_n;
-		cout << n->position << endl;
+		//cout << n->position << endl;
 	}
 }
 
