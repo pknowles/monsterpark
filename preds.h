@@ -11,6 +11,7 @@ public:
 	virtual void draw();
 	virtual void doAI(NPC* npc);
 	virtual NPC* add(vec2f spawn);
+	virtual void doAICollision(float dt, NPC *npc, Tile *tile) override;
 };
 
 struct Pred : public NPC {

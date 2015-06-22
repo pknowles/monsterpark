@@ -9,6 +9,8 @@
 #include "prey.h"
 #include "preds.h"
 
+#include "grid.h"
+
 using namespace std;
 
 void PredGroup::init()
@@ -69,3 +71,16 @@ NPC* PredGroup::add(vec2f spawn)
 	onAdd(pred);
 	return pred;
 }
+
+void PredGroup::doAICollision(float dt, NPC *npc, Tile *tile)
+{
+	const float damage = 2.0f;
+
+	tile->health -= damage *dt;
+	if (tile->health <= 0)
+	{
+		tile->color = vec3f(0, 1, 0);
+		tile->walkable = true;
+	}
+}
+

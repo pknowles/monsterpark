@@ -126,6 +126,11 @@ NPC* PreyGroup::add(vec2f spawn)
 	return pred;
 }
 
+void PreyGroup::doAICollision(float dt, NPC *npc, Tile *tile)
+{
+	// Nothing really
+}
+
 Prey::Prey()
 {
 	moneyTime = 1.0f + UNIT_RAND;
