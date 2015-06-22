@@ -26,6 +26,9 @@ VBOMesh sphere;
 PreyGroup prey;
 PredGroup preds;
 
+int maxPrey = 10;
+vec2f spawnPoint = vec2f(50.0f);
+
 void update(float dt)
 {
 	if (jeltz.buttonDown("`"))
@@ -44,6 +47,12 @@ void update(float dt)
 		reloadTimer = 1.0f;
 		if (Shader::reloadModified())
 			jeltz.postUnfocusedRedisplay();
+	}
+	
+	//if we can spawn more at the entrance
+	if (prey.count() < maxPrey && prey.density(spawnPoint, 5.0f) < 4)
+	{
+		prey.add(spawnPoint);
 	}
 }
 
@@ -77,6 +86,9 @@ int main()
 
 	sphere = VBOMesh::grid(vec2i(64, 32), VBOMesh::paramSphere);
 	sphere.upload();
+	
+	prey.init();
+	preds.init();
 
 	jeltz.run();
 	return 0;

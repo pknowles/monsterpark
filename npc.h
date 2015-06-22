@@ -21,6 +21,9 @@ public:
 	virtual void update(float dt);
 	virtual NPC* add(vec2f spawn) =0;
 	virtual void rem(NPC* npc);
+	vec2f toGridPos(vec2f pos);
+	float density(vec2f position, float radius);
+	int count();
 };
 
 struct NPC {

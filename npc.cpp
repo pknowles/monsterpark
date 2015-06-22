@@ -1,6 +1,16 @@
 
+#include <map>
+#include <vector>
+#include <string>
+#include <set>
+#include <iostream>
+
 #include <pyarlib/includegl.h>
+#include <pyarlib/util.h>
+#include <pyarlib/vec.h>
 #include "npc.h"
+
+using namespace std;
 
 void NPCGroup::init()
 {
@@ -16,8 +26,12 @@ void NPCGroup::update(float dt)
 	for (auto l : grid)
 		l.clear();
 	
-	//for (auto n : all)
-		
+	for (auto n : all)
+	{
+		vec2i p = toGridPos(n->position);
+		p = vmin(vmax(p, vec2i(0)), gridRes-1);
+		grid[p.y*gridRes.x+p.x].push_back(n);
+	}	
 
 	for (auto n : all)
 	{
@@ -26,6 +40,26 @@ void NPCGroup::update(float dt)
 		n->position += dir * dt;
 		n->heading = rot2f::fromVec(dir).y;
 	}
+}
+
+vec2f NPCGroup::toGridPos(vec2f pos)
+{
+	return (gridRes * (pos - gridArea.origin)) / gridArea.size;
+}
+
+float NPCGroup::density(vec2f position, float radius)
+{
+	vec2i p = toGridPos(position);
+	int r = (int)ceil(gridRes.x * radius / gridArea.size.x);
+	int c = 0;
+	for (int y = mymin(0, p.y-r); y < mymax(gridRes.y-1, p.y+r); ++y)
+	{
+		for (int x = mymin(0, p.x-r); x < mymax(gridRes.x-1, p.x+r); ++x)
+		{
+			c += (int)grid[y*gridRes.x+x].size();
+		}
+	}
+	return c;
 }
 
 void NPCGroup::draw()
@@ -51,6 +85,7 @@ void NPCGroup::draw()
 void NPCGroup::onAdd(NPC* n)
 {
 	all.push_back(n);
+	cout << "New NPC " << n->position << endl;
 }
 
 void NPCGroup::rem(NPC* npc)
@@ -67,6 +102,11 @@ void NPCGroup::rem(NPC* npc)
 		++i;
 	}
 	all.erase(all.begin()+i);
+}
+
+int NPCGroup::count()
+{
+	return all.size();
 }
 
 NPC::NPC()
