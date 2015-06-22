@@ -33,6 +33,8 @@ void GridFly::update(float dt)
 		{camera.move(vec3f(0.0f, 0.0f, -mspeed * dt)); moved = true;}
 	if (jeltz->button("W"))
 		{camera.move(vec3f(0.0f, 0.0f, mspeed * dt)); moved = true;}
+	if (jeltz->mouseWheel().y != 0.0f)
+		{camera.zoom(-jeltz->mouseWheel().y * camera.getZoom() * 0.1); moved = true;}
 	
 	//middle mouse pan
 	/*if (jeltz->button("MButton"))
