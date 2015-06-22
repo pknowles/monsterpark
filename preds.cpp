@@ -22,9 +22,9 @@ void PredGroup::init()
 	aspectRatio = img.width / (float)(img.height * frames);
 }
 
-void PredGroup::update(float dt)
+void PredGroup::update(float dt, Grid *tileGrid)
 {
-	NPCGroup::update(dt);
+	NPCGroup::update(dt, tileGrid);
 	
 	if (!prey)
 		return;

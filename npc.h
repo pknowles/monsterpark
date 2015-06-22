@@ -5,6 +5,7 @@
 #include "util.h"
 
 class NPC;
+class Grid;
 
 class NPCGroup {
 protected:
@@ -22,7 +23,7 @@ protected:
 public:
 	virtual void init();
 	virtual void draw();
-	virtual void update(float dt);
+	virtual void update(float dt, Grid *tileGrid);
 	virtual NPC* add(vec2f spawn) =0;
 	virtual void rem(NPC* npc);
 	virtual void doAI(NPC* npc);

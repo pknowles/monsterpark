@@ -50,6 +50,8 @@ public:
 	void startPlacing();
 	void endPlacing(int type);
 
-	Tile &getTile(unsigned int x, unsigned int y);
+	Tile &getTile(int x, int y);
+
+	const vec2f &getSize() const { return size; }
 };
 

@@ -11,6 +11,8 @@
 #include <pyarlib/vec.h>
 #include "npc.h"
 
+#include "grid.h"
+
 using namespace std;
 
 void NPCGroup::init()
@@ -25,8 +27,8 @@ void NPCGroup::init()
 	gridArea.size = vec2f(100.0f);
 	grid.resize(gridRes.x * gridRes.y);
 }
-
-void NPCGroup::update(float dt)
+#include <iostream>
+void NPCGroup::update(float dt, Grid *tileGrid)
 {
 	for (auto& l : grid)
 		l.clear();
@@ -44,10 +46,24 @@ void NPCGroup::update(float dt)
 		n->moveTimer -= dt;
 		if (n->moveTimer < 0.0f)
 			doAI(n);
+
 		vec2f dir = n->movingTo - n->position;
 		if (dir.size() > 1.0f)
 			dir /= dir.size();
-		n->position += dir * dt * moveSpeed;
+
+		auto vel = dir * dt * moveSpeed;
+		auto newPos = n->position + vel;
+		newPos.x = myclamp(newPos.x, 0.0f, tileGrid->getSize().x - 0.1f);
+		newPos.y = myclamp(newPos.y, 0.0f, tileGrid->getSize().y - 0.1f);
+		
+		vec2i tilePos((int) newPos.x, (int) newPos.y);
+		auto &tile = tileGrid->getTile(tilePos.x, tilePos.y);
+
+		if (tile.id == -1 || tile.walkable)
+			n->position = newPos;
+		else
+			cout << "Collision!\n";
+
 		n->turningTo = -rot2f::fromVec(vec3f(dir.x, 0.0f, dir.y)).y;
 		if (n->turningTo - n->heading > pi)
 			n->heading += 2.0f * pi;

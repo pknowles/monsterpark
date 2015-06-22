@@ -60,8 +60,8 @@ void update(float dt)
 	
 	gameStatus.textf("Money: $%i\nPopularity: %i", money, popularity);
 	
-	prey.update(dt);
-	preds.update(dt);
+	prey.update(dt, &grid);
+	preds.update(dt, &grid);
 	
 	money += prey.collectIncome();
 	
