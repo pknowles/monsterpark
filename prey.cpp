@@ -3,10 +3,27 @@
 #include <vector>
 #include <string>
 #include <set>
+#include <assert.h>
 
 #include <pyarlib/pyarlib.h>
+#include <pyarlib/text.h>
 #include "prey.h"
 #include "preds.h"
+
+using namespace std;
+
+map<std::string, Text*> textCache;
+
+Text* getText(std::string text)
+{
+	if (textCache.find(text) == textCache.end())
+	{
+		cout << "New Text: " << text << endl;
+		textCache[text] = new Text(Config::getString("font"), Config::get("font-size"));
+		*textCache[text] = text;
+	}
+	return textCache[text];
+}
 
 int PreyGroup::collectIncome()
 {
@@ -18,15 +35,20 @@ int PreyGroup::collectIncome()
 void PreyGroup::newIncome(vec2f pos, int money)
 {
 	income += money;
-	moneyIcons.push_back(MoneyIcon());
+	/*moneyIcons.push_back(MoneyIcon());
 	moneyIcons.back().pos = pos;
 	moneyIcons.back().time = 1.0;
+	moneyIcons.back().amount = money;*/
 }
 	
-void PreyGroup::init()
+PreyGroup::PreyGroup()
 {
 	predators = NULL;
 	income = 0;
+}
+
+void PreyGroup::init()
+{
 	NPCGroup::init();
 	QI::ImagePNG img;
 	img.loadImage("prey.png");
@@ -52,7 +74,22 @@ void PreyGroup::update(float dt, Grid *tileGrid)
 		{
 			n->moneyTime += 1.0f;
 			int density = predators->density(n->position, 5.0f);
-			newIncome(n->position, density);
+			//cout << density << endl;
+			if (density > 0)
+				newIncome(n->position, density);
+		}
+	}
+	
+	for (auto t = moneyIcons.begin(); t != moneyIcons.end();)
+	{
+		if (t->time > 0.0f)
+		{
+			t->time -= dt;
+			++t;
+		}
+		else
+		{
+			moneyIcons.erase(t);
 		}
 	}
 }
@@ -60,7 +97,17 @@ void PreyGroup::update(float dt, Grid *tileGrid)
 void PreyGroup::draw()
 {
 	NPCGroup::draw();
+
+	mat44 mv, proj;
+	glGetFloatv(GL_PROJECTION_MATRIX, proj.m);
+	glGetFloatv(GL_MODELVIEW_MATRIX, mv.m);
+	mat44 mvp = mv * proj;
 	
+	
+	for (auto t : moneyIcons)
+	{
+		getText(intToString(t.amount))->draw(mv * mat44::translate(vec3f(t.pos, 0.0)));
+	}
 }
 
 NPC* PreyGroup::add(vec2f spawn)

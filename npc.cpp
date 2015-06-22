@@ -45,7 +45,10 @@ void NPCGroup::update(float dt, Grid *tileGrid)
 		n->moveTimer -= dt;
 		if (n->moveTimer < 0.0f)
 			doAI(n);
-		vec2f dir = (n->movingTo - n->position).unit();
+
+		vec2f dir = n->movingTo - n->position;
+		if (dir.size() > 1.0f)
+			dir /= dir.size();
 
 		auto vel = dir * dt * moveSpeed;
 		auto newPos = n->position + vel;
@@ -74,7 +77,7 @@ void NPCGroup::update(float dt, Grid *tileGrid)
 void NPCGroup::doAI(NPC* n)
 {
 	n->moveTimer = UNIT_RAND * 2.0f;
-	n->movingTo = n->position + (vec2f(UNIT_RAND, UNIT_RAND) - vec2f(0.5f)).unit() * 2.0f;
+	n->movingTo = n->position + (vec2f(UNIT_RAND, UNIT_RAND) - vec2f(0.5f)) * 2.0f;
 }
 
 vec2f NPCGroup::toGridPos(vec2f pos)

@@ -5,11 +5,13 @@ class PredGroup;
 
 struct MoneyIcon {
 	vec2f pos;
+	int amount;
 	float time;
 };
 
 class PreyGroup : public NPCGroup {
 public:
+	PreyGroup();
 	std::vector<MoneyIcon> moneyIcons;
 	PredGroup* predators;
 	int income;

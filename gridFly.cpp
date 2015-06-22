@@ -102,9 +102,9 @@ GridFly::GridFly()
 
 	sensitivity = 0.5;
 	speed = 100.0;
-	pos = vec3f(-50, 20, 20);
+	pos = vec3f(-50, 10, 5);
 	
-	camera.zoomAt(pos, vec3f(pos.x, 0, pos.z + 10.01f));
+	camera.zoomAt(pos, vec3f(pos.x, 0, pos.z + 0.01f));
 	camera.regenCamera();
 }
 

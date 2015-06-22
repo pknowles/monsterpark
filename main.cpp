@@ -146,7 +146,7 @@ int main()
 	prey.init();
 	preds.init();
 
-	jeltz.printEvents();
+	//jeltz.printEvents();
 	jeltz.run();
 	return 0;
 }
