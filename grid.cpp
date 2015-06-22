@@ -169,8 +169,9 @@ void Grid::endPlacing(int type)
 	}
 }
 
-Tile &Grid::getTile(unsigned int x, unsigned int y)
+Tile &Grid::getTile(int x, int y)
 {
+	// TODO: bounds checking on x/y
 	return tiles[x][y];
 }
 

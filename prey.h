@@ -16,7 +16,7 @@ public:
 	int collectIncome();
 	void newIncome(vec2f pos, int money);
 	virtual void init();
-	virtual void update(float dt);
+	virtual void update(float dt, Grid *tileGrid);
 	virtual void draw();
 	virtual NPC* add(vec2f spawn);
 };
