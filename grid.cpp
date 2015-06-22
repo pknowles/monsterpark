@@ -17,15 +17,15 @@ void Grid::drawLines()
 		float xPos = (x / (float) cols) * size.x;
 
 		glVertex3f(xPos, 0, 0);
-		glVertex3f(xPos, 0, size.y);
+		glVertex3f(xPos, size.y, 0);
 	}
 	
 	for (unsigned int y = 0; y <= rows; y++)
 	{
 		float yPos = (y / (float) rows) * size.y;
 
-		glVertex3f(0, 0, yPos);
-		glVertex3f(size.x, 0, yPos);
+		glVertex3f(0, yPos, 0);
+		glVertex3f(size.x, yPos, 0);
 	}
 	glEnd();
 }
@@ -37,10 +37,10 @@ void Grid::drawTileQuad(const vec2i &pos, const vec3f &color)
 	glColor3f(color.x, color.y, color.z);
 
 	glBegin(GL_QUADS);
-	glVertex3f(pos.x,              0, pos.y);
-	glVertex3f(pos.x,              0, pos.y + cellSize.y);
-	glVertex3f(pos.x + cellSize.x, 0, pos.y + cellSize.y);
-	glVertex3f(pos.x + cellSize.x, 0, pos.y);
+	glVertex3f(pos.x,              pos.y, 0);
+	glVertex3f(pos.x,              pos.y + cellSize.y, 0);
+	glVertex3f(pos.x + cellSize.x, pos.y + cellSize.y, 0);
+	glVertex3f(pos.x + cellSize.x, pos.y, 0);
 	glEnd();
 
 	glColor3f(1, 1, 1);
@@ -57,10 +57,10 @@ void Grid::drawPlacement(const vec2i &start, const vec2i &end, const vec3f &colo
 
 	glBegin(GL_QUADS);
 
-	glVertex3f(min.x, 0, min.y);
-	glVertex3f(min.x, 0, max.y);
-	glVertex3f(max.x, 0, max.y);
-	glVertex3f(max.x, 0, min.y);
+	glVertex3f(min.x, min.y, 0);
+	glVertex3f(min.x, max.y, 0);
+	glVertex3f(max.x, max.y, 0);
+	glVertex3f(max.x, min.y, 0);
 
 	glEnd();
 
@@ -85,6 +85,8 @@ void Grid::placeTile(unsigned int x, unsigned int y, int type)
 		return;
 
 	tiles[x][y].id = type;
+	tiles[x][y].walkable = type == 0 ? false : true;
+	tiles[x][y].health = 10.0f;
 }
 
 
@@ -144,7 +146,7 @@ void Grid::startPlacing()
 	placing = true;
 }
 
-void Grid::endPlacing()
+void Grid::endPlacing(int type)
 {
 	if (!placing)
 		return;
@@ -161,8 +163,13 @@ void Grid::endPlacing()
 	{
 		for (unsigned int y = minY; y <= maxY; y++)
 		{
-			placeTile(x, y, 1);
+			placeTile(x, y, type);
 		}
 	}
+}
+
+Tile &Grid::getTile(unsigned int x, unsigned int y)
+{
+	return tiles[x][y];
 }
 

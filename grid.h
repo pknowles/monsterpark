@@ -47,6 +47,8 @@ public:
 	void draw();
 
 	void startPlacing();
-	void endPlacing();
+	void endPlacing(int type);
+
+	Tile &getTile(unsigned int x, unsigned int y);
 };
 

@@ -74,7 +74,7 @@ void update(float dt)
 	if (jeltz.button("LButton"))
 		grid.startPlacing();
 	else
-		grid.endPlacing();
+		grid.endPlacing(buildType.selected);
 	
 	//if we can spawn more at the entrance
 	if (prey.count() < maxPrey && prey.density(spawnPoint, 5.0f) < 4)
