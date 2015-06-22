@@ -122,7 +122,7 @@ void GridFly::uploadCamera()
 	glMultMatrixf(m.m);
 }
 
-vec3f GridFly::getMousePos(const vec2f &mousePosN)
+vec2f GridFly::getMousePos(const vec2f &mousePosN)
 {
 	vec3f start;
 	vec3f end;
@@ -136,6 +136,6 @@ vec3f GridFly::getMousePos(const vec2f &mousePosN)
 
 	dir *= d;
 
-	return start + dir;
+	return vec3f(start + dir).xz();
 }
 

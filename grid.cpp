@@ -1,10 +1,11 @@
 #include "grid.h"
+#include "tileType.h"
 
-#include <GL/gl.h>
+#include <pyarlib/includegl.h>
 
 vec2i Grid::getTilePos()
 {
-	return vec2i((int) (mousePos.x / (float) cols * size.x), (int) (mousePos.z / (float) rows * size.y));
+	return vec2i((int) (mousePos.x / (float) cols * size.x), (int) (mousePos.y / (float) rows * size.y));
 }
 
 void Grid::drawLines()
@@ -74,7 +75,7 @@ void Grid::drawTiles()
 		for (unsigned int j = 0; j < rows; j++)
 		{
 			if (tiles[i][j].id != -1)
-				drawTileQuad(vec2i(i, j), vec3f(1, 0, 0));
+				drawTileQuad(vec2i(i, j), tiles[i][j].color);
 		}
 	}
 }
@@ -84,9 +85,9 @@ void Grid::placeTile(unsigned int x, unsigned int y, int type)
 	if (tiles[x][y].id != -1)
 		return;
 
-	tiles[x][y].id = type;
-	tiles[x][y].walkable = type == 0 ? false : true;
-	tiles[x][y].health = 10.0f;
+	auto &tileType = TileTypes::types[type];
+
+	tiles[x][y] = {tileType.id, tileType.walkable, tileType.health, tileType.color};
 }
 
 
@@ -96,7 +97,7 @@ void Grid::placeTile(unsigned int x, unsigned int y, int type)
 Grid::Grid(float width, float height, unsigned int rows, unsigned int cols) : rows(rows), cols(cols), placing(false)
 {
 	size = vec2f(width, height);
-	mousePos = vec3f(0, 0, 0);
+	mousePos = vec2f(0, 0);
 	
 	tiles = new Tile*[cols];
 	for (unsigned int i = 0; i < cols; i++)
@@ -114,12 +115,12 @@ Grid::~Grid()
 	delete [] tiles;
 }
 
-void Grid::update(float dt, const vec3f &mousePos)
+void Grid::update(float dt, const vec2f &mousePos)
 {
 	this->mousePos = mousePos;
 
 	this->mousePos.x = myclamp(this->mousePos.x, 0.0f, size.x - (size.x / (float) cols / 2.0f));
-	this->mousePos.z = myclamp(this->mousePos.z, 0.0f, size.y - (size.y / (float) rows / 2.0f));
+	this->mousePos.y = myclamp(this->mousePos.y, 0.0f, size.y - (size.y / (float) rows / 2.0f));
 }
 
 void Grid::draw()
