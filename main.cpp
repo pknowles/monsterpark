@@ -14,9 +14,15 @@ Visual studio *spit* *spit* *spit* steps:
 
 #include <pyarlib/pyarlib.h>
 
+#include "grid.h"
+#include "gridFly.h"
+
 Jeltz jeltz("Jeltz");
 JeltzFly fly;
+GridFly gridFly;
 JeltzGUI gui;
+
+Grid grid;
 
 VBOMesh sphere;
 
@@ -36,16 +42,26 @@ void update(float dt)
 		if (Shader::reloadModified())
 			jeltz.postUnfocusedRedisplay();
 	}
+
+	vec3f mousePos = gridFly.getMousePos(jeltz.mousePosN());
+	grid.update(dt, mousePos);
+	
+	if (jeltz.button("LButton"))
+		grid.placeTile();
 }
 
 void display()
 {
-	fly.uploadCamera();
+	//fly.uploadCamera();
+	gridFly.uploadCamera();
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	sphere.draw();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//sphere.draw();
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	grid.draw();
 }
 
 int main()
@@ -53,7 +69,8 @@ int main()
 	jeltz.setUpdate(update);
 	jeltz.setDisplay(display);
 	jeltz.add(&gui);
-	jeltz.add(&fly);
+	//jeltz.add(&fly);
+	jeltz.add(&gridFly);
 	jeltz.init();
 
 	Material::defaultAnisotropy = 16;
